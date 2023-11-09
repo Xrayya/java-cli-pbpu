@@ -25,6 +25,7 @@ replay_pid*
 
 # IDE configs
 .settings/
+.vscode/
 
 # Use local settings
 .classpath
