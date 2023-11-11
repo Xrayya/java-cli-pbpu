@@ -6,7 +6,7 @@ package com.RecordUtil;
 public class Log<T> extends Record<T> {
 
     public Log(String recordName, String recordFile) {
-        super(recordName, recordFile);
+        super(recordName);
     }
 
     /**

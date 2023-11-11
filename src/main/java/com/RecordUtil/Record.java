@@ -7,11 +7,9 @@ import java.util.List;
  * Record is class to access record file. The record is read-only
  */
 public class Record<T> {
-    private String recordName;
     private String recordFile;
 
-    public Record(String recordName, String recordFile) {
-        this.recordName = recordName;
+    public Record(String recordFile) {
         this.recordFile = recordFile;
     }
 
