@@ -1,4 +1,4 @@
-package com;
+package com.Model;
 
 import java.util.UUID;
 
@@ -12,17 +12,22 @@ public class Employee {
         this.employeeID = employeeID;
         this.name = name;
         this.username = username;
+        this.password = password;
     }
 
     public UUID getEmployeeID() {
-        return employeeID;
+        return this.employeeID;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
+    }
+
+    public String getPassword() {
+        return this.password;
     }
 }
