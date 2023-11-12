@@ -3,6 +3,8 @@ package com.CashierAppUtil;
 import java.util.List;
 import java.util.UUID;
 
+import com.RecordUtil.Log;
+
 /**
  * Cashier
  */
@@ -15,13 +17,10 @@ public class CashierMachine {
      * Print all menu in the record
      */
     public void printMenu() {
-        // ?? Field yang di print apa saja
-        // NOTE: gunakan class `Record` untuk membaca record, kemudian format data yang
-        // didapat menjadi list menu yang human-readable lalu cetak ke terminal
         checkNull(this.menus);
+        System.out.printf("%-20s %s\n", "NAMA MENU", "HARGA");
         for (Menu m : this.menus) {
-            // TODO: Print all menu here
-            System.out.println(m);
+            System.out.printf("%-20s %s\n", m.getMenuName(), m.getPrice());
         }
     }
 
@@ -31,8 +30,6 @@ public class CashierMachine {
      * @param order new order to be added
      */
     public void addOrder(Order order) {
-        // NOTE: manipulasi object orders di class ini sehingga bisa menambahkan order
-        // dari parameter method ini
         checkNull(order);
         this.orders.add(order);
         System.out.println("Order berhasil ditambahkan");
@@ -49,17 +46,14 @@ public class CashierMachine {
      * 
      * @param order order to be removed from the list of orders
      */
-    public void removeOrder(Order order, UUID ordeUuid) {
-        // ?? Remove order berdasarkan Id?
-        // NOTE: manipulasi object orders di class ini sehingga bisa menghapus order
-        // dari parameter method ini
+    public void removeOrder(UUID ordeUuid) {
         checkNull(ordeUuid);
-        checkNull(order);
         int indexFound = findOrder(ordeUuid);
         if (indexFound == -1) {
             System.out.println("Order tidak ditemukan");
         } else {
             this.orders.remove(indexFound);
+            System.out.println("Order berhasil dihapus");
         }
     }
 
@@ -70,14 +64,12 @@ public class CashierMachine {
      * @param order   edited order
      */
     public void editOrder(UUID orderId, Order order) {
-        // ?? Field yang bisa diupdate apa saja?
-        // NOTE: manipulasi object orders di class ini sehingga mengubah object order
-        // dengan orderId sesuai parameter lalu
         int indexFound = findOrder(orderId);
         if (indexFound == -1) {
             System.out.println("Order tidak ditemukan");
         } else {
-            // TODO: edit order disini
+            this.orders.set(indexFound, order);
+            System.out.println("Order telah diupdate");
         }
 
     }
@@ -97,9 +89,16 @@ public class CashierMachine {
      * @param order order to be printed in struct
      */
     public void printStruct(Order order) {
-        // ?? print struk butuh field apa saja
-        // NOTE: cetak struk berdasarkan data order dari parameter
         checkNull(order);
+        System.out.printf("%-20s %-20s %s\n", "ORDER ID", "TABLE NUMBER", "TOTAL PRICE");
+        System.out.printf("%-20s %-20s %s\n", order.getOrderID(), order.getTableNumber(), order.getTotalPrice());
+        System.out.println("====================== ORDERS =======================");
+        System.out.printf("%-20s %-20s %-20s %s\n", "MENU NAME", "PRICE", "QUANTITY", "TOTAL PRICE");
+        for (MenuOrder mo : order.getMenuOrders()) {
+            System.out.printf("%-20s %-20s %s\n", mo.getMenu().getMenuName(), mo.getMenu().getPrice(), mo.getQuantity(),
+                    mo.getTotalPrice());
+        }
+
     }
 
     /**
@@ -108,5 +107,6 @@ public class CashierMachine {
     public void saveToRecord() {
         // NOTE: gunakan class `Log` untuk menyimpan data orders ke record
         checkNull(this.orders);
+        // TODO: write record
     }
 }
