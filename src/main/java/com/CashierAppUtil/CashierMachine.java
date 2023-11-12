@@ -1,7 +1,10 @@
 package com.CashierAppUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.RecordUtil.Record;
 
 /**
  * Cashier
@@ -11,6 +14,13 @@ public class CashierMachine {
     private List<Order> orders;
     protected List<Menu> menus;
 
+    public CashierMachine() {
+        Record<Menu> menuRecord = new Record<>("menus");
+        this.menus = menuRecord.readRecordFile();
+
+        this.orders = new ArrayList<>();
+    }
+
     /**
      * Print all menu in the record
      */
@@ -18,7 +28,6 @@ public class CashierMachine {
         // ?? Field yang di print apa saja
         // NOTE: gunakan class `Record` untuk membaca record, kemudian format data yang
         // didapat menjadi list menu yang human-readable lalu cetak ke terminal
-        checkNull(this.menus);
         for (Menu m : this.menus) {
             // TODO: Print all menu here
             System.out.println(m);
@@ -30,18 +39,19 @@ public class CashierMachine {
      * 
      * @param order new order to be added
      */
-    public void addOrder(Order order) {
+    public boolean addOrder(Order order) {
         // NOTE: manipulasi object orders di class ini sehingga bisa menambahkan order
         // dari parameter method ini
-        checkNull(order);
+        if (checkNull(order)) {
+            return false;
+        }
         this.orders.add(order);
         System.out.println("Order berhasil ditambahkan");
+        return true;
     }
 
-    private void checkNull(Object o) throws NullPointerException {
-        if (o == null) {
-            throw new NullPointerException("Object tidak boleh null");
-        }
+    private boolean checkNull(Object o) {
+        return o == null;
     }
 
     /**
@@ -49,18 +59,15 @@ public class CashierMachine {
      * 
      * @param order order to be removed from the list of orders
      */
-    public void removeOrder(Order order, UUID ordeUuid) {
+    public boolean removeOrder(Order order) {
         // ?? Remove order berdasarkan Id?
         // NOTE: manipulasi object orders di class ini sehingga bisa menghapus order
         // dari parameter method ini
-        checkNull(ordeUuid);
-        checkNull(order);
-        int indexFound = findOrder(ordeUuid);
-        if (indexFound == -1) {
-            System.out.println("Order tidak ditemukan");
-        } else {
-            this.orders.remove(indexFound);
+        if (checkNull(order)) {
+            return false;
         }
+
+        return this.orders.remove(order);
     }
 
     /**
@@ -69,17 +76,19 @@ public class CashierMachine {
      * @param orderId orderId from the order that to be edited
      * @param order   edited order
      */
-    public void editOrder(UUID orderId, Order order) {
+    public boolean editOrder(UUID orderId, Order order) {
         // ?? Field yang bisa diupdate apa saja?
         // NOTE: manipulasi object orders di class ini sehingga mengubah object order
         // dengan orderId sesuai parameter lalu
         int indexFound = findOrder(orderId);
         if (indexFound == -1) {
             System.out.println("Order tidak ditemukan");
-        } else {
-            // TODO: edit order disini
+            return false;
         }
 
+        // TODO: edit order disini
+        // TODO: edit the line below if not needed (added to avoid error)
+        return false;
     }
 
     private int findOrder(UUID ordeUuid) {
