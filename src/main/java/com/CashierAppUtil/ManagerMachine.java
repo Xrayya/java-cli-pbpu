@@ -6,35 +6,39 @@ import java.util.UUID;
  * ManagerMachine
  */
 public class ManagerMachine extends CashierMachine {
-
+    
     /**
      * Add menu to menu list
      * @param menu menu to be added
+     * @return `true` if menu succesfully added or `false` if not
      */
-    public void addMenu(Menu menu) {
-        // TODO: implement this method
-        // NOTE: manipulasi object menus pada class ini untuk menambahkan menu dari
-        // parameter method ini
+    public boolean addMenu(Menu menu) {
+        return this.menus.add(menu);
     }
 
     /**
      * Remove menu from menu list
      * @param menu menu to be removed from the list
+     * @return `true` if the specified menu found or `false` if not found
      */
-    public void removeMenu(Menu menu) {
-        // TODO: implement this method
-        // NOTE: manipulasi object menus pada class ini untuk menghapus menu dari
-        // parameter method ini
+    public boolean removeMenu(Menu menu) {
+        return this.menus.remove(menu);
     }
 
     /**
      * Edit menu in the menu list
      * @param menuId menuId from menu that to be edited
      * @param menu edited menu
+     * @return `true` if edit the specified menuId found or `false` if not found
      */
-    public void editMenu(UUID menuId, Menu menu) {
-        // TODO: implement this method
-        // NOTE: manipulasi object menus pada class ini untuk mengedit menu dengan menuId dari
-        // parameter method ini kemudian ubah isinya sesuai dengan menu pada parameter kedua
+    public boolean editMenu(UUID menuId, Menu menu) {
+        for(int i = 0; i < this.menus.size(); i++) {
+            if(menuId == this.menus.get(i).getMenuId()) {
+                this.menus.set(i, menu);
+                return true;
+            }
+        }
+
+        return false;
     }
 }
