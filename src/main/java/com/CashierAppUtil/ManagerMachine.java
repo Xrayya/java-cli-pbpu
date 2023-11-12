@@ -21,8 +21,15 @@ public class ManagerMachine extends CashierMachine {
      * @param menu menu to be removed from the list
      * @return `true` if the specified menu found or `false` if not found
      */
-    public boolean removeMenu(Menu menu) {
-        return this.menus.remove(menu);
+    public boolean removeMenu(UUID menuID) {
+        for (Menu menu : menus) {
+            if (menu.getMenuId().equals(menuID)) {
+                this.menus.remove(menu);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
