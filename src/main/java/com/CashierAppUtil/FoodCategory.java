@@ -4,8 +4,8 @@ package com.CashierAppUtil;
  * FoodCategory
  */
 public enum FoodCategory {
-    Makanan("food"),
-    Minuman("drink");
+    Food("food"),
+    Drink("drink");
 
     private String categoryName;
 
