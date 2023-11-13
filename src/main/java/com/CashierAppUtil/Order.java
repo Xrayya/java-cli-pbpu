@@ -3,43 +3,44 @@ package com.CashierAppUtil;
 import java.util.List;
 import java.util.UUID;
 
+import com.Model.Employee;
+
 /**
  * Order
  */
 public class Order {
 
-    private UUID orderID;
+    private UUID orderId;
     private List<MenuOrder> menuOrders;
     private String customerName;
     private int customerMoney;
     private int customerChange;
+    private Employee employee;
     private int totalPrice;
     private int tableNumber;
     private boolean done = false;
 
-    public Order(UUID orderID, List<MenuOrder> menuOrders, String customerName, int customerMoney, int tableNumber) {
-        this.orderID = orderID;
+    public Order(List<MenuOrder> menuOrders, String customerName, int customerMoney, Employee employee, int tableNumber) {
+        this.orderId = UUID.randomUUID();
         this.menuOrders = menuOrders;
         this.customerName = customerName;
         this.customerMoney = customerMoney;
+        this.employee = employee;
         this.tableNumber = tableNumber;
     }
 
     public int getTotalPrice() {
-        // TODO: implement this method
-        // NOTE: hitung total harga dari order ini berdasarkan list menuOrder
         totalPrice = 0;
         if (!menuOrders.isEmpty()){
             for (MenuOrder menuOrder : menuOrders) {
-                totalPrice += menuOrder.getMenu().getPrice() * menuOrder.getQuantity();
+                totalPrice += menuOrder.getSubTotal();
             }
-            return totalPrice;
         }
         return totalPrice;
     }
 
-    public UUID getOrderID() {
-        return orderID;
+    public UUID getOrderId() {
+        return orderId;
     }
 
     public List<MenuOrder> getMenuOrders() {
@@ -72,10 +73,6 @@ public class Order {
 
     public void setDone(boolean done) {
         this.done = done;
-    }
-
-    public void setOrderID(UUID orderID) {
-        this.orderID = orderID;
     }
 
     public int getCustomerMoney() {
