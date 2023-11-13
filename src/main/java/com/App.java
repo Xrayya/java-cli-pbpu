@@ -182,6 +182,7 @@ public class App {
 
         switch (editChoice) {
             case 1:
+
                 break;
             case 2:
                 System.out.printf("Old customer name: %s\n", unfinishedOrder.getCustomerName());
