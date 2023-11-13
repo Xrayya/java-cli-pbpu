@@ -229,6 +229,48 @@ public class App {
     }
 
     private static void editUnfinishedOrder() {
+        // TODO
+        List<Order> unfinishedOrders = cashierMachine.getUnfinishedOrders();
+        for (int i = 0; i < unfinishedOrders.size(); i++) {
+            System.out.println((i+1) + " " +
+                    unfinishedOrders.get(i).getOrderId() + " " +
+                    unfinishedOrders.get(i).getCustomerName() + " " +
+                    unfinishedOrders.get(i).getTotalPrice() + " " +
+                    unfinishedOrders.get(i).getTableNumber());
+        }
+        System.out.printf("Select unfinished order to edit (1 to %d)", unfinishedOrders.size());
+        int unfinishedOrderNum = Integer.parseInt(input.nextLine());
+        if (unfinishedOrderNum > unfinishedOrders.size()) return;
+        Order unfinishedOrder = unfinishedOrders.get(unfinishedOrderNum-1);
+        System.out.println(unfinishedOrder.toString());
+        System.out.println("Select field to edit 1. Menu Order\n" +
+                "2. Customer Name\n" +
+                "3. Table Number\n" +
+                "4. Order Status\n");
+        int editChoice = Integer.parseInt(input.nextLine());
+
+        switch (editChoice) {
+            case 1:
+
+                break;
+            case 2:
+                System.out.printf("Old customer name: %s\n", unfinishedOrder.getCustomerName());
+                System.out.println("New customer name: ");
+                unfinishedOrder.setCustomerName(input.nextLine());
+                break;
+            case 3:
+                System.out.printf("Old table number: %d\n", unfinishedOrder.getTableNumber());
+                System.out.println("New table number: ");
+                unfinishedOrder.setTableNumber(Integer.parseInt(input.nextLine()));
+                break;
+            case 4:
+                System.out.println("Change order status to done? (Y/n)");
+                String case4Choice = input.nextLine();
+                if (case4Choice.equals("Y") || case4Choice.equals("y") || case4Choice.equals("")) {
+                    unfinishedOrder.setDone(true);
+                }
+                break;
+        }
 
     }
 
@@ -266,7 +308,38 @@ public class App {
     }
 
     private static void addMenu() {
+        if (cashierMachine == null) {
+            return;
+        }
 
+        System.out.println("Enter new menu name");
+        String menuName = input.nextLine();
+        System.out.println("Enter new menu shortname");
+        String menuShortName = input.nextLine();
+        System.out.printf("1. Food\n2. Drink\nEnter category for %s (1 or 2)\n", menuShortName);
+        int foodCatInt = Integer.parseInt(input.nextLine());
+        System.out.printf("Enter price for %s\n", menuShortName);
+        int newMenuPrice = Integer.parseInt(input.nextLine());
+
+        FoodCategory newMenuFoodCat;
+        if (foodCatInt == 1) {
+            newMenuFoodCat = FoodCategory.Food;
+        } else if (foodCatInt == 2) {
+            newMenuFoodCat = FoodCategory.Drink;
+        } else {
+            newMenuFoodCat = FoodCategory.Food;
+        }
+
+        ManagerMachine mc = (ManagerMachine) cashierMachine;
+        boolean isAdded = mc.addMenu(
+                new Menu(menuShortName, menuName, newMenuFoodCat, newMenuPrice)
+        );
+
+        if (isAdded) {
+            System.out.println("New menu is successfully added");
+            return;
+        }
+        System.out.println("New menu is added");
     }
 
     private static void removeMenu() {
@@ -311,10 +384,10 @@ public class App {
                 do {
                     System.out.print("Enter new food category [Makanan/Minuman] (type enter to keep the old one): ");
                     if (inputString.equals("Makanan")) {
-                        newMenu.setFoodCategory(FoodCategory.Makanan);
+                        newMenu.setFoodCategory(FoodCategory.Food);
                         break;
                     } else if (inputString.equals("Minuman")) {
-                        newMenu.setFoodCategory(FoodCategory.Minuman);
+                        newMenu.setFoodCategory(FoodCategory.Drink);
                         break;
                     } else if (inputString.equals("")) {
                         break;
