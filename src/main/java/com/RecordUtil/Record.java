@@ -15,9 +15,9 @@ import com.google.gson.reflect.TypeToken;
  * Record is class to access record file. The record is read-only
  */
 public class Record<T> {
-    private File recordFile;
+    protected File recordFile;
     private Class<T[]> modelClass;
-    private final Gson gson = new Gson();
+    protected final Gson gson = new Gson();
 
     /**
      * @param recordFileName name of the file to be accessed. The file should be in the `/RecordFiles` directory with a structure like this project 
