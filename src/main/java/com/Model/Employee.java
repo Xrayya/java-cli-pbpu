@@ -17,6 +17,13 @@ public abstract class Employee {
         this.password = password;
     }
 
+    public Employee(Employee employee) {
+        this.employeeID = employee.getEmployeeID();
+        this.name = employee.getName();
+        this.username = employee.getUsername();
+        this.password = employee.getPassword();
+    }
+
     public UUID getEmployeeID() {
         return this.employeeID;
     }

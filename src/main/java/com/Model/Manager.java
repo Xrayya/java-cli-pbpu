@@ -10,6 +10,10 @@ public class Manager extends Employee {
         super(employeeID, name, username, password);
     }
 
+    public Manager(Employee employee) {
+        super(employee);
+    }
+
     @Override
     public CashierMachine getMachine() {
         return new ManagerMachine();

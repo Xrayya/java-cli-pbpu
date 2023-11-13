@@ -4,17 +4,25 @@ import java.util.List;
 
 import com.Model.Cashier;
 import com.Model.Employee;
+import com.Model.Manager;
 import com.RecordUtil.Record;
 
 /**
  * Auth
  */
 public class Auth {
-    private static final List<Employee> employeesRecord = new Record<Employee>("employees", Employee[].class).readRecordFile();
     public static Employee authenticate(String username, String password) {
-        for (Employee employee : employeesRecord) {
-            if (employee.getUsername().equals(username) && employee.getPassword().equals(password)) {
-                return employee;
+        List<Manager> managers = new Record<Manager>("managers", Manager[].class).readRecordFile();
+        for (Manager manager : managers) {
+            if (manager.getUsername().equals(username) && manager.getPassword().equals(password)) {
+                return manager;
+            }
+        }
+
+        List<Cashier> cashiers = new Record<Cashier>("cashiers", Cashier[].class).readRecordFile();
+        for (Cashier cashier : cashiers) {
+            if (cashier.getUsername().equals(username) && cashier.getPassword().equals(password)) {
+                return cashier;
             }
         }
         return null;
