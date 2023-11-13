@@ -17,7 +17,7 @@ public class CashierMachine {
 
     public CashierMachine() {
         this.menus = new ArrayList<>();
-        this.menus.addAll(new Record<Menu>("menus", Menu[].class).readRecordFile());
+        this.synchronizeMenu();
         this.orders = new ArrayList<>();
     }
 
@@ -90,6 +90,28 @@ public class CashierMachine {
         return -1;
     }
 
+    public List<Order> getUnfinishedOrders() {
+        List<Order> orders = new ArrayList<>();
+        for (Order order : this.orders) {
+            if (!order.isDone()) {
+                orders.add(order);
+            }
+        }
+
+        return orders;
+    }
+
+    public List<Order> getFinishedOrders() {
+        List<Order> orders = new ArrayList<>();
+        for (Order order : this.orders) {
+            if (order.isDone()) {
+                orders.add(order);
+            }
+        }
+
+        return orders;
+    }
+
     /**
      * Print struct of order
      * 
@@ -114,5 +136,9 @@ public class CashierMachine {
     public void saveToRecord() {
         Log<Order> orderLog = new Log<>("orders", Order[].class);
         orderLog.appendRecord(this.orders);
+    }
+
+    public void synchronizeMenu() {
+        this.menus.addAll(new Record<Menu>("menus", Menu[].class).readRecordFile());
     }
 }
