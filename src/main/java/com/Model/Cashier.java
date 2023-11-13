@@ -9,6 +9,10 @@ public class Cashier extends Employee {
         super(employeeID, name, username, password);
     }
 
+    public Cashier(Employee employee) {
+        super(employee);
+    }
+
     @Override
     public CashierMachine getMachine() {
         return new CashierMachine();
