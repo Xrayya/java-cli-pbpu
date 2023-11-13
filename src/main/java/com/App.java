@@ -160,7 +160,7 @@ public class App {
     }
 
     private static void editUnfinishedOrder() {
-
+        // TODO
     }
 
     private static void cancelUnfinishedOrder() {
@@ -197,7 +197,38 @@ public class App {
     }
 
     private static void addMenu() {
+        // TODO
+        if (cashierMachine == null) {
+            return;
+        }
 
+        System.out.println("Enter new menu name");
+        String menuName = input.nextLine();
+        System.out.println("Enter new menu shortname");
+        String menuShortName = input.nextLine();
+        System.out.printf("1. Food\n2. Drink\nEnter category for %s (1 or 2)\n", menuShortName);
+        int foodCatInt = Integer.parseInt(input.nextLine());
+        System.out.printf("Enter price for %s\n", menuShortName);
+        int newMenuPrice = Integer.parseInt(input.nextLine());
+
+        FoodCategory newMenuFoodCat;
+        if (foodCatInt == 1) {
+            newMenuFoodCat = FoodCategory.Food;
+        } else if (foodCatInt == 2) {
+            newMenuFoodCat = FoodCategory.Drink;
+        } else {
+            newMenuFoodCat = FoodCategory.Food;
+        }
+        ManagerMachine mc = (ManagerMachine) cashierMachine;
+        boolean isAdded = mc.addMenu(
+                new Menu(menuShortName, menuName, newMenuFoodCat, newMenuPrice)
+        );
+
+        if (isAdded) {
+            System.out.println("New menu is successfully added");
+            return;
+        }
+        System.out.println("New menu is added");
     }
 
     private static void removeMenu() {
@@ -242,10 +273,10 @@ public class App {
                 do {
                     System.out.print("Enter new food category [Makanan/Minuman] (type enter to keep the old one): ");
                     if (inputString.equals("Makanan")) {
-                        newMenu.setFoodCategory(FoodCategory.Makanan);
+                        newMenu.setFoodCategory(FoodCategory.Food);
                         break;
                     } else if (inputString.equals("Minuman")) {
-                        newMenu.setFoodCategory(FoodCategory.Minuman);
+                        newMenu.setFoodCategory(FoodCategory.Drink);
                         break;
                     } else if (inputString.equals("")) {
                         break;
