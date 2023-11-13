@@ -2,12 +2,12 @@ package com.CashierAppUtil;
 
 import java.util.List;
 
+import com.Model.Cashier;
 import com.Model.Employee;
+import com.Model.Manager;
 import com.RecordUtil.Record;
 
 public class Auth {
-    public final static String managerType = "manager";
-    public final static String cashierType = "cashier";
     private static List<Employee> listEmployee;
     private Record<Employee> recordEmployee = new Record<>("employee", Employee[].class);
 
@@ -24,10 +24,10 @@ public class Auth {
         return null;
     }
 
-    public CashierMachine authorization(String employeeType) {
-        if (employeeType.equals(Auth.managerType)) {
+    public CashierMachine authorization(Employee employeeType) {
+        if (employeeType instanceof Manager) {
             return new ManagerMachine();
-        } else if (employeeType.equals(Auth.cashierType)) {
+        } else if (employeeType instanceof Cashier) {
             return new CashierMachine();
         }
         return null;
