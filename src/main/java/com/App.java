@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import com.CashierAppUtil.Auth;
 import com.CashierAppUtil.CashierMachine;
+import com.CashierAppUtil.ManagerMachine;
 import com.Model.Employee;
 import com.Model.Manager;
 
@@ -98,7 +99,7 @@ public class App {
         printBoldSeparator();
         System.out.println("1. Print All Menu");
         System.out.println("2. Take Order");
-        System.out.println("3. Mark Order Done"); 
+        System.out.println("3. Mark Order Done");
         System.out.println("4. Edit Unfinished Order");
         System.out.println("5. Cancel Unfinished Order"); // not mvp
         System.out.println("6. Print Unfinished Orders"); // not mvp
@@ -139,7 +140,10 @@ public class App {
     }
 
     private static void printAllMenu() {
-
+        if (cashierMachine == null) {
+            return;
+        }
+        cashierMachine.printMenu();
     }
 
     private static void takeOrder() {
@@ -183,7 +187,19 @@ public class App {
     }
 
     private static void removeMenu() {
-
+        if (cashierMachine == null) {
+            return;
+        }
+        printAllMenu();
+        System.out.println("Enter menu short name :");
+        String menuShortName = input.nextLine();
+        ManagerMachine mc = (ManagerMachine) cashierMachine;
+        boolean isRemoved = mc.removeMenu(menuShortName);
+        if (isRemoved) {
+            System.out.println("Menu is successfully removed");
+            return;
+        }
+        System.out.println("Menu is not found");
     }
 
     private static void editMenu() {
