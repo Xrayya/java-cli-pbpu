@@ -32,6 +32,13 @@ public class MenuOrder {
         // TODO: implement this method
         // Note: hitung total harga dari menuOrder ini berdasarkan menu yang dipilih dan
         // jumlahnya
-        return 0;
+        int totalPrice = 0;
+        
+        if(menu.equals(null)){
+            return totalPrice;
+        }
+        totalPrice = menu.getPrice() * quantity;
+
+        return totalPrice;
     }
 }

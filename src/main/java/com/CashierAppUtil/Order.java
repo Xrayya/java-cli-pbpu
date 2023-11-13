@@ -28,9 +28,14 @@ public class Order {
     public int getTotalPrice() {
         // TODO: implement this method
         // NOTE: hitung total harga dari order ini berdasarkan list menuOrder
-        int totalPrice = 0;
-
-        return this.totalPrice = totalPrice;
+        totalPrice = 0;
+        if (!menuOrders.isEmpty()){
+            for (MenuOrder menuOrder : menuOrders) {
+                totalPrice += menuOrder.getMenu().getPrice() * menuOrder.getQuantity();
+            }
+            return totalPrice;
+        }
+        return totalPrice;
     }
 
     public UUID getOrderID() {
