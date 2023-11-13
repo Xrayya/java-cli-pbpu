@@ -1,7 +1,11 @@
 package com.CashierAppUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.RecordUtil.Log;
+import com.RecordUtil.Record;
 
 /**
  * Cashier
@@ -11,60 +15,104 @@ public class CashierMachine {
     private List<Order> orders;
     protected List<Menu> menus;
 
+    public CashierMachine() {
+        this.menus = new ArrayList<>();
+        this.menus.addAll(new Record<Menu>("menus", Menu[].class).readRecordFile());
+        this.orders = new ArrayList<>();
+    }
+
     /**
      * Print all menu in the record
      */
     public void printMenu() {
-        // TODO: implement this method
-        // NOTE: gunakan class `Record` untuk membaca record, kemudian format data yang
-        // didapat menjadi list menu yang human-readable lalu cetak ke terminal
+        for (Menu menu : this.menus) {
+            System.out.println("-".repeat(50));
+            System.out.println(menu.toString());
+        }
+        System.out.println("-".repeat(50));
     }
 
     /**
      * Add new order
+     * 
      * @param order new order to be added
      */
-    public void addOrder(Order order) {
-        // TODO: implement this method
-        // NOTE: manipulasi object orders di class ini sehingga bisa menambahkan order
-        // dari parameter method ini
+    public boolean addOrder(Order order) {
+        if (checkNull(order)) {
+            return false;
+        }
+        this.orders.add(order);
+        return true;
+    }
+
+    private boolean checkNull(Object o) {
+        return o == null;
     }
 
     /**
      * Remove one order
+     * 
      * @param order order to be removed from the list of orders
      */
-    public void removeOrder(Order order) {
-        // TODO: implement this method
-        // NOTE: manipulasi object orders di class ini sehingga bisa menghapus order
-        // dari parameter method ini
+    public boolean removeOrder(UUID orderId) {
+        if (checkNull(orderId)) {
+            return false;
+        }
+        int findOrder = findOrder(orderId);
+        if (findOrder == -1) {
+            return false;
+        }
+        this.orders.remove(findOrder);
+        return true;
     }
 
     /**
      * Edit existing order
+     * 
      * @param orderId orderId from the order that to be edited
-     * @param order edited order
+     * @param order   edited order
      */
-    public void editOrder(UUID orderId, Order order) {
-        // TODO: implement this method
-        // NOTE: manipulasi object orders di class ini sehingga mengubah object order
-        // dengan orderId sesuai parameter lalu
+    public boolean editOrder(UUID orderId, Order order) {
+        int indexFound = findOrder(orderId);
+        if (indexFound == -1) {
+            return false;
+        }
+        this.orders.set(indexFound, order);
+        return true;
+    }
+
+    private int findOrder(UUID orderId) {
+        for (int i = 0; i < this.orders.size(); i++) {
+            if (this.orders.get(i).getOrderId().equals(orderId)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
      * Print struct of order
+     * 
      * @param order order to be printed in struct
      */
     public void printStruct(Order order) {
-        // TODO: implement this method
-        // NOTE: cetak struk berdasarkan data order dari parameter
+        // checkNull(order);
+        // System.out.printf("%-20s %-20s %s\n", "ORDER ID", "TABLE NUMBER", "TOTAL PRICE");
+        // System.out.printf("%-20s %-20s %s\n", order.getOrderID(), order.getTableNumber(), order.getTotalPrice());
+        // System.out.println("====================== ORDERS =======================");
+        // System.out.printf("%-20s %-20s %-20s %s\n", "MENU NAME", "PRICE", "QUANTITY", "TOTAL PRICE");
+        // for (MenuOrder mo : order.getMenuOrders()) {
+        //     System.out.printf("%-20s %-20s %s\n", mo.getMenu().getMenuName(), mo.getMenu().getPrice(), mo.getQuantity(),
+        //             mo.getTotalPrice());
+        // }
+        System.out.println(order.toString());
     }
 
     /**
      * Save the current order list to the record file
      */
     public void saveToRecord() {
-        // TODO: implement this method
-        // NOTE: gunakan class `Log` untuk menyimpan data orders ke record
+        Log<Order> orderLog = new Log<>("orders", Order[].class);
+        orderLog.appendRecord(this.orders);
     }
 }
