@@ -1,7 +1,5 @@
 package com.CashierAppUtil;
 
-import java.util.UUID;
-
 /**
  * ManagerMachine
  */
@@ -21,9 +19,9 @@ public class ManagerMachine extends CashierMachine {
      * @param menu menu to be removed from the list
      * @return `true` if the specified menu found or `false` if not found
      */
-    public boolean removeMenu(UUID menuID) {
+    public boolean removeMenu(String menuShortName) {
         for (Menu menu : menus) {
-            if (menu.getMenuId().equals(menuID)) {
+            if (menu.getMenuShortName().equals(menuShortName)) {
                 this.menus.remove(menu);
                 return true;
             }
@@ -34,13 +32,13 @@ public class ManagerMachine extends CashierMachine {
 
     /**
      * Edit menu in the menu list
-     * @param menuId menuId from menu that to be edited
+     * @param menuShortName menuId from menu that to be edited
      * @param menu edited menu
      * @return `true` if edit the specified menuId found or `false` if not found
      */
-    public boolean editMenu(UUID menuId, Menu menu) {
+    public boolean editMenu(String menuShortName, Menu menu) {
         for(int i = 0; i < this.menus.size(); i++) {
-            if(menuId == this.menus.get(i).getMenuId()) {
+            if(menuShortName == this.menus.get(i).getMenuShortName()) {
                 this.menus.set(i, menu);
                 return true;
             }

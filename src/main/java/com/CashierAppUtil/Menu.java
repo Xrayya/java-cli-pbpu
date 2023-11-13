@@ -1,30 +1,32 @@
 package com.CashierAppUtil;
 
-import java.util.UUID;
-
 /**
  * Menu
  */
 public class Menu {
 
-    private UUID menuId;
+    private String menuShortName;
     private String menuName;
     private FoodCategory foodCategory;
     private int price;
 
-    public Menu(UUID menuId, String menuName, FoodCategory foodCategory, int price) {
-        this.menuId = menuId;
+    public Menu(String menuShortName, String menuName, FoodCategory foodCategory, int price) {
+        this.menuShortName = menuShortName;
         this.menuName = menuName;
         this.foodCategory = foodCategory;
         this.price = price;
     }
 
-    public UUID getMenuId() {
-        return menuId;
+    public void setMenuShortName(String menuShortName) {
+        this.menuShortName = menuShortName;
+    }
+
+    public String getMenuShortName() {
+        return this.menuShortName;
     }
 
     public String getMenuName() {
-        return menuName;
+        return this.menuName;
     }
 
     public void setMenuName(String menuName) {
@@ -47,4 +49,14 @@ public class Menu {
         this.price = price;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append(String.format("%-15 : %s\n", "Short Name", this.menuShortName));
+        s.append(String.format("%-15 : %s\n", "Menu Name", this.menuName));
+        s.append(String.format("%-15 : %s\n", "Category", this.foodCategory.getCategoryName()));
+        s.append(String.format("%-15 : %d\n", "Price", this.price));
+
+        return s.toString();
+    }
 }
