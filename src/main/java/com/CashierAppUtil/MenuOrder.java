@@ -28,10 +28,21 @@ public class MenuOrder {
         this.quantity = quantity;
     }
 
-    public int getTotalPrice() {
-        // TODO: implement this method
-        // Note: hitung total harga dari menuOrder ini berdasarkan menu yang dipilih dan
-        // jumlahnya
-        return 0;
+    public int getSubTotal() {
+        if(menu.equals(null)){
+            return 0;
+        }
+
+        return menu.getPrice() * quantity;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append(menu.toString());
+        s.append(String.format("%-15 : %s\n", "Quantity", this.quantity));
+        s.append(String.format("%-15 : %s\n", "Sub Total Price", this.getSubTotal()));
+
+        return s.toString();
     }
 }
