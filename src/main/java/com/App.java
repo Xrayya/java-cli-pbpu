@@ -161,6 +161,47 @@ public class App {
 
     private static void editUnfinishedOrder() {
         // TODO
+        List<Order> unfinishedOrders = cashierMachine.getUnfinishedOrders();
+        for (int i = 0; i < unfinishedOrders.size(); i++) {
+            System.out.println((i+1) + " " +
+                    unfinishedOrders.get(i).getOrderId() + " " +
+                    unfinishedOrders.get(i).getCustomerName() + " " +
+                    unfinishedOrders.get(i).getTotalPrice() + " " +
+                    unfinishedOrders.get(i).getTableNumber());
+        }
+        System.out.printf("Select unfinished order to edit (1 to %d)", unfinishedOrders.size());
+        int unfinishedOrderNum = Integer.parseInt(input.nextLine());
+        if (unfinishedOrderNum > unfinishedOrders.size()) return;
+        Order unfinishedOrder = unfinishedOrders.get(unfinishedOrderNum-1);
+        System.out.println(unfinishedOrder.toString());
+        System.out.println("Select field to edit 1. Menu Order\n" +
+                "2. Customer Name\n" +
+                "3. Table Number\n" +
+                "4. Order Status\n");
+        int editChoice = Integer.parseInt(input.nextLine());
+
+        switch (editChoice) {
+            case 1:
+                break;
+            case 2:
+                System.out.printf("Old customer name: %s\n", unfinishedOrder.getCustomerName());
+                System.out.println("New customer name: ");
+                unfinishedOrder.setCustomerName(input.nextLine());
+                break;
+            case 3:
+                System.out.printf("Old table number: %d\n", unfinishedOrder.getTableNumber());
+                System.out.println("New table number: ");
+                unfinishedOrder.setTableNumber(Integer.parseInt(input.nextLine()));
+                break;
+            case 4:
+                System.out.println("Change order status to done? (Y/n)");
+                String case4Choice = input.nextLine();
+                if (case4Choice.equals("Y") || case4Choice.equals("y") || case4Choice.equals("")) {
+                    unfinishedOrder.setDone(true);
+                }
+                break;
+        }
+
     }
 
     private static void cancelUnfinishedOrder() {
@@ -197,7 +238,6 @@ public class App {
     }
 
     private static void addMenu() {
-        // TODO
         if (cashierMachine == null) {
             return;
         }
@@ -219,6 +259,7 @@ public class App {
         } else {
             newMenuFoodCat = FoodCategory.Food;
         }
+
         ManagerMachine mc = (ManagerMachine) cashierMachine;
         boolean isAdded = mc.addMenu(
                 new Menu(menuShortName, menuName, newMenuFoodCat, newMenuPrice)
