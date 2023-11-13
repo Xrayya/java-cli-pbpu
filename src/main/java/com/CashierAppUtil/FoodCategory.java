@@ -16,5 +16,4 @@ public enum FoodCategory {
     public String getCategoryName() {
         return this.categoryName;
     }
-
 }
