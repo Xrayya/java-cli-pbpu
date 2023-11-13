@@ -141,9 +141,9 @@ public class CashierMachine {
     /**
      * Save the current order list to the record file
      */
-    public void saveToRecord() {
+    public boolean saveToRecord() {
         Log<Order> orderLog = new Log<>("orders", Order[].class);
-        orderLog.appendRecord(this.orders);
+        return orderLog.appendRecord(this.orders);
     }
 
     public void synchronizeMenu() {
