@@ -47,4 +47,14 @@ public class Menu {
         this.price = price;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append(String.format("%-15 : %s\n", "Short Name", this.menuShortName));
+        s.append(String.format("%-15 : %s\n", "Menu Name", this.menuName));
+        s.append(String.format("%-15 : %s\n", "Category", this.foodCategory.getCategoryName()));
+        s.append(String.format("%-15 : %d\n", "Price", this.price));
+
+        return s.toString();
+    }
 }

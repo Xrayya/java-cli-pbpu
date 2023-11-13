@@ -93,4 +93,23 @@ public class Order {
     public void setCustomerChange(int customerChange) {
         this.customerChange = customerChange;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append(String.format("%-15 : %s\n", "Order ID", this.orderId));
+        s.append(String.format("%-15 : %s\n", "Customer Name", this.customerName));
+        s.append(String.format("%-15 : %s\n", "Employee Name", this.employee.getName()));
+        s.append("Selected Menu: \n");
+        for (MenuOrder menuOrder : menuOrders) {
+            s.append("-".repeat(50)).append('\n');
+            s.append(menuOrder.toString());
+        }
+        s.append('\n');
+        s.append(String.format("%-15 : %s\n", "Total Price", this.getTotalPrice()));
+        s.append(String.format("%-15 : %s\n", "Cash", this.customerMoney));
+        s.append(String.format("%-15 : %s\n", "Change", this.customerChange));
+
+        return s.toString();
+    }
 }
