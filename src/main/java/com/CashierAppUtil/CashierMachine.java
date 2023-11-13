@@ -32,6 +32,10 @@ public class CashierMachine {
         System.out.println("-".repeat(50));
     }
 
+    public List<Menu> getAllMenu() {
+        return this.menus;
+    }
+
     /**
      * Add new order
      * 

@@ -1,10 +1,15 @@
 package com;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import com.CashierAppUtil.Auth;
 import com.CashierAppUtil.CashierMachine;
+import com.CashierAppUtil.FoodCategory;
 import com.CashierAppUtil.ManagerMachine;
+import com.CashierAppUtil.Menu;
+import com.CashierAppUtil.Order;
 import com.Model.Employee;
 import com.Model.Manager;
 
@@ -171,7 +176,16 @@ public class App {
     }
 
     private static void printAllOrderNewOrders() {
+        List<Order> newOrderList = new ArrayList<>();
+        newOrderList.addAll(cashierMachine.getUnfinishedOrders());
+        newOrderList.addAll(cashierMachine.getFinishedOrders());
 
+        printtThinSeparator();
+        System.out.println("All new Orders: ");
+        printtThinSeparator();
+        for (Order order : newOrderList) {
+            System.out.println(order.toString());
+        }
     }
 
     private static void saveOrderToRecord() {
@@ -203,7 +217,64 @@ public class App {
     }
 
     private static void editMenu() {
+        ManagerMachine managerMachine = (ManagerMachine) cashierMachine;
+        String menuShortName = "";
+        do {
+            System.out.print("Enter menu short name (type ? to list all menu): ");
+            menuShortName = input.nextLine();
+            if (menuShortName.equals("?")) {
+                printAllMenu();
+            }
+        } while (menuShortName.equals("?"));
+        for (Menu menu : managerMachine.getAllMenu()) {
+            if (menu.getMenuShortName().equals(menuShortName)) {
+                Menu newMenu = menu;
+                System.out.print("Enter new short name (type enter to keep the old one): ");
+                String inputString = input.nextLine();
+                if (!inputString.equals("")) {
+                    newMenu.setMenuShortName(inputString);
+                }
+                System.out.print("Enter new menu name (type enter to keep the old one): ");
+                inputString = input.nextLine();
+                if (!inputString.equals("")) {
+                    newMenu.setMenuName(inputString);
+                }
+                do {
+                    System.out.print("Enter new food category [Makanan/Minuman] (type enter to keep the old one): ");
+                    if (inputString.equals("Makanan")) {
+                        newMenu.setFoodCategory(FoodCategory.Makanan);
+                        break;
+                    } else if (inputString.equals("Minuman")) {
+                        newMenu.setFoodCategory(FoodCategory.Minuman);
+                        break;
+                    } else if (inputString.equals("")) {
+                        break;
+                    } else {
+                        System.out.println("Sorry, your input is unrecognized as value of food category");
+                    }
+                } while (true);
+                do {
+                    System.out.print("Enter new price [must be number] (type enter to keep the old one): ");
+                    inputString = input.nextLine();
+                    if (!inputString.equals("")) {
+                        if (inputString.matches("[0-9]+")) {
+                            newMenu.setPrice(Integer.parseInt(inputString));
+                            break;
+                        } else {
+                            System.out.println(
+                                    "Sorry, your input contains non-number character, please input number only");
+                        }
+                    } else {
+                        break;
+                    }
+                } while (true);
 
+                managerMachine.editMenu(menuShortName, newMenu);
+                return;
+            }
+
+            System.out.println("Sorry, menu with specified menu short name not found");
+        }
     }
 
     private static void printBoldSeparator() {
