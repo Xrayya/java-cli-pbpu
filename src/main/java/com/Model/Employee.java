@@ -2,7 +2,9 @@ package com.Model;
 
 import java.util.UUID;
 
-public class Employee {
+import com.CashierAppUtil.CashierMachine;
+
+public abstract class Employee {
     private UUID employeeID;
     private String name;
     private String username;
@@ -30,4 +32,6 @@ public class Employee {
     public String getPassword() {
         return this.password;
     }
+
+    public abstract CashierMachine getMachine();
 }

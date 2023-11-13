@@ -1,9 +1,20 @@
 package com.CashierAppUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.RecordUtil.Record;
+
 /**
  * ManagerMachine
  */
 public class ManagerMachine extends CashierMachine {
+
+    public List<Order> getOrderRecord() {
+        List<Order> orderRecord = new ArrayList<>();
+        orderRecord.addAll(new Record<Order>("orders", Order[].class).readRecordFile());
+        return orderRecord;
+    }
     
     /**
      * Add menu to menu list
