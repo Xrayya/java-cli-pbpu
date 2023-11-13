@@ -145,7 +145,10 @@ public class App {
     }
 
     private static void printAllMenu() {
-
+        if (cashierMachine == null) {
+            return;
+        }
+        cashierMachine.printMenu();
     }
 
     private static void takeOrder() {
@@ -198,7 +201,19 @@ public class App {
     }
 
     private static void removeMenu() {
-
+        if (cashierMachine == null) {
+            return;
+        }
+        printAllMenu();
+        System.out.println("Enter menu short name :");
+        String menuShortName = input.nextLine();
+        ManagerMachine mc = (ManagerMachine) cashierMachine;
+        boolean isRemoved = mc.removeMenu(menuShortName);
+        if (isRemoved) {
+            System.out.println("Menu is successfully removed");
+            return;
+        }
+        System.out.println("Menu is not found");
     }
 
     private static void editMenu() {
