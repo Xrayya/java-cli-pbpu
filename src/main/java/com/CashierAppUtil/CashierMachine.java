@@ -32,6 +32,10 @@ public class CashierMachine {
         System.out.println("-".repeat(50));
     }
 
+    public List<Menu> getAllMenu() {
+        return this.menus;
+    }
+
     /**
      * Add new order
      * 
@@ -81,7 +85,7 @@ public class CashierMachine {
         return true;
     }
 
-    private int findOrder(UUID orderId) {
+    public int findOrder(UUID orderId) {
         for (int i = 0; i < this.orders.size(); i++) {
             if (this.orders.get(i).getOrderId().equals(orderId)) {
                 return i;
@@ -110,6 +114,10 @@ public class CashierMachine {
         }
 
         return orders;
+    }
+
+    public List<Order> getOrders() {
+        return this.orders;
     }
 
     /**
