@@ -155,25 +155,25 @@ public class App {
         
         //Header
         printBoldSeparator();
-        System.out.println("Fitur Tambah Order Customer");
+        System.out.println("Add Customer Orders");
         printBoldSeparator();
         cashierMachine.printMenu();
         printtThinSeparator();
 
         //Customer
-        System.out.print("Masukkan nama customer: ");
+        System.out.print("Input customer name: ");
         String customerName = input.nextLine();
-        System.out.print("Masukkan uang customer: ");
+        System.out.print("Input customer total money: ");
         int customerMoney = input.nextInt();
-        System.out.print("Masukkan nomer meja customer: ");
+        System.out.print("Input customer table: ");
         int customerTable = input.nextInt();
         printtThinSeparator();
 
         //Penambahan order
         do {
-            System.out.print("Masukkan nama menu: ");
+            System.out.print("Input short menu name: ");
             String menuShortName = input.nextLine();
-            System.out.print("Masukkan jumlah: ");
+            System.out.print("Input the Quantity: ");
             int totalMenuOrdered = input.nextInt();
 
             for(int i = 0; i < cashierMachine.getAllMenu().size(); i++) {
@@ -185,11 +185,11 @@ public class App {
             }
 
             if(doesMenuExist == false) {
-                System.out.println("Nama menu yang anda masukkan tidak terdaftar, silahkan ulangi!");
+                System.out.println("The menu doesn't exist, please input again!");
                 continue;
             }
 
-            System.out.print("Lanjut menambahkan pesanan? (y/t)");
+            System.out.print("do you want to add order again? (y/t)");
             String lanjut = input.nextLine();
             
             if(lanjut.equals('t')) {
@@ -204,9 +204,23 @@ public class App {
     }
 
     private static void markOrderComplete() {
-        System.out.print("Masukkan ID orderan yang udah selesai: ");
-        String uuid = input.nextLine();
-        int findOrder = cashierMachine.findOrder(UUID.fromString(uuid));
+        
+        boolean validate = false;
+        int findOrder = 0;
+        
+        do {
+            System.out.print("Input finished order ID: ");
+            String uuid = input.nextLine();
+            findOrder = cashierMachine.findOrder(UUID.fromString(uuid));
+
+            if(findOrder == -1) {
+                validate = true;
+                System.out.println("Wrong ID!");
+            }
+            
+        } while(validate);
+
+        
         cashierMachine.getOrders().get(findOrder).setDone(true);
     }
 
