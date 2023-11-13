@@ -3,9 +3,11 @@ package com;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 import com.CashierAppUtil.Auth;
 import com.CashierAppUtil.CashierMachine;
+import com.CashierAppUtil.MenuOrder;
 import com.CashierAppUtil.FoodCategory;
 import com.CashierAppUtil.ManagerMachine;
 import com.CashierAppUtil.Menu;
@@ -152,11 +154,78 @@ public class App {
     }
 
     private static void takeOrder() {
+        List<MenuOrder> menuOrderedByCustomer = new ArrayList<>();
+        boolean validate = true;
+        boolean doesMenuExist = false;
 
+        // Header
+        printBoldSeparator();
+        System.out.println("Add Customer Orders");
+        printBoldSeparator();
+        cashierMachine.printMenu();
+        printtThinSeparator();
+
+        // Customer
+        System.out.print("Input customer name: ");
+        String customerName = input.nextLine();
+        System.out.print("Input customer total money: ");
+        int customerMoney = input.nextInt();
+        System.out.print("Input customer table: ");
+        int customerTable = input.nextInt();
+        printtThinSeparator();
+
+        // Penambahan order
+        do {
+            System.out.print("Input short menu name: ");
+            String menuShortName = input.nextLine();
+            System.out.print("Input the Quantity: ");
+            int totalMenuOrdered = input.nextInt();
+
+            for (int i = 0; i < cashierMachine.getAllMenu().size(); i++) {
+                if (menuShortName == cashierMachine.getAllMenu().get(i).getMenuShortName()) {
+                    menuOrderedByCustomer.add(new MenuOrder(cashierMachine.getAllMenu().get(i), totalMenuOrdered));
+                    doesMenuExist = true;
+                    break;
+                }
+            }
+
+            if (doesMenuExist == false) {
+                System.out.println("The menu doesn't exist, please input again!");
+                continue;
+            }
+
+            System.out.print("do you want to add order again? (y/t)");
+            String lanjut = input.nextLine();
+
+            if (lanjut.equals('t')) {
+                validate = false;
+            }
+            printtThinSeparator();
+        } while (validate);
+
+        // Buat objek order
+        Order order = new Order(menuOrderedByCustomer, customerName, customerMoney, employee, customerTable);
+        cashierMachine.addOrder(order);
     }
 
     private static void markOrderComplete() {
 
+        boolean validate = false;
+        int findOrder = 0;
+
+        do {
+            System.out.print("Input finished order ID: ");
+            String uuid = input.nextLine();
+            findOrder = cashierMachine.findOrder(UUID.fromString(uuid));
+
+            if (findOrder == -1) {
+                validate = true;
+                System.out.println("Wrong ID!, please input ID again!");
+            }
+
+        } while (validate);
+
+        cashierMachine.getOrders().get(findOrder).setDone(true);
     }
 
     private static void editUnfinishedOrder() {
