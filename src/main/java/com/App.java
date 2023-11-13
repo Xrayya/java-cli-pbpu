@@ -155,15 +155,15 @@ public class App {
     }
 
     private static void cancelUnfinishedOrder() {
-
+        // WARNING: not mvp
     }
 
     private static void printUnfinishedOrders() {
-
+        // WARNING: not mvp
     }
 
     private static void printNewFinishedOrders() {
-        
+        // WARNING: not mvp
     }
 
     private static void printAllOrderNewOrders() {
@@ -171,11 +171,11 @@ public class App {
     }
 
     private static void saveOrderToRecord() {
-
+        // WARNING: not mvp
     }
 
     private static void printOrderRecord() {
-
+        // WARNING: not mvp
     }
 
     private static void addMenu() {
