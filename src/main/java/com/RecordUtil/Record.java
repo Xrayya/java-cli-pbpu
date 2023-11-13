@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,13 +16,16 @@ import com.google.gson.reflect.TypeToken;
  */
 public class Record<T> {
     private File recordFile;
-    private String recordName;
-    private Class<T> modelClass;
+    private Class<T[]> modelClass;
     private final Gson gson = new Gson();
 
-    public Record(String recordFileName) {
-        this.recordName = recordFileName;
+    /**
+     * @param recordFileName name of the file to be accessed. The file should be in the `/RecordFiles` directory with a structure like this project 
+     * @param modelClass Class object which is the class of this record
+     */
+    public Record(String recordFileName, Class<T[]> modelClass) {
         this.recordFile = new File(String.format("./src/main/java/com/RecordFiles/%s.json", recordFileName));
+        this.modelClass = modelClass;
     }
 
     /**
@@ -30,8 +34,6 @@ public class Record<T> {
      * @return
      */
     public List<T> readRecordFile() {
-        Type recordType = new TypeToken<ArrayList<T>>() {
-        }.getType();
         StringBuilder s = new StringBuilder();
         try {
             Scanner sc = new Scanner(this.recordFile);
@@ -43,6 +45,6 @@ public class Record<T> {
             e.printStackTrace();
         }
 
-        return gson.fromJson(s.toString(), recordType);
+        return Arrays.asList(gson.fromJson(s.toString(), modelClass)) ;
     }
 }
