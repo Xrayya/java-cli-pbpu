@@ -2,14 +2,12 @@ package com.RecordUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 
 /**
  * Record is class to access record file. The record is read-only
@@ -17,7 +15,7 @@ import com.google.gson.reflect.TypeToken;
 public class Record<T> {
     protected File recordFile;
     private Class<T[]> modelClass;
-    protected final Gson gson = new Gson();
+    protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     /**
      * @param recordFileName name of the file to be accessed. The file should be in the `/RecordFiles` directory with a structure like this project 

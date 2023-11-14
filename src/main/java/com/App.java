@@ -7,13 +7,15 @@ import java.util.UUID;
 
 import com.CashierAppUtil.Auth;
 import com.CashierAppUtil.CashierMachine;
-import com.CashierAppUtil.MenuOrder;
-import com.CashierAppUtil.FoodCategory;
 import com.CashierAppUtil.ManagerMachine;
-import com.CashierAppUtil.Menu;
-import com.CashierAppUtil.Order;
 import com.Model.Employee;
+import com.Model.EmployeeModel;
+import com.Model.FoodCategory;
 import com.Model.Manager;
+import com.Model.Menu;
+import com.Model.MenuOrder;
+import com.Model.Order;
+import com.RecordUtil.Log;
 
 /**
  * Hello world!
@@ -32,7 +34,8 @@ public class App {
     }
 
     private static void runMainLoop() {
-        while (true) {
+        boolean keepLoop = true;
+        while (keepLoop) {
             printMainMenu();
             if (employee instanceof Manager) {
                 printManagerAdditionalMainMenu();
@@ -72,6 +75,7 @@ public class App {
                     break;
                 case "0":
                     logout();
+                    keepLoop = false;
                     break;
                 case "00":
                     exit();
@@ -134,7 +138,11 @@ public class App {
             System.out.print("Enter password: ");
             String password = input.nextLine();
             employee = Auth.authenticate(username, password);
+            if (employee == null) {
+                System.out.println("Username or password mismatch");
+            }
         }
+        cashierMachine = employee.getMachine();
     }
 
     private static void logout() {
@@ -147,123 +155,159 @@ public class App {
     }
 
     private static void printAllMenu() {
-        if (cashierMachine == null) {
-            return;
-        }
         cashierMachine.printMenu();
     }
 
     private static void takeOrder() {
-        List<MenuOrder> menuOrderedByCustomer = new ArrayList<>();
+        List<MenuOrder> orderedMenuList = new ArrayList<>();
         boolean validate = true;
-        boolean doesMenuExist = false;
+        boolean menuExist = false;
 
-        // Header
         printBoldSeparator();
         System.out.println("Add Customer Orders");
         printBoldSeparator();
         cashierMachine.printMenu();
         printtThinSeparator();
 
-        // Customer
         System.out.print("Input customer name: ");
         String customerName = input.nextLine();
         System.out.print("Input customer total money: ");
         int customerMoney = input.nextInt();
         System.out.print("Input customer table: ");
         int customerTable = input.nextInt();
+        input.nextLine();
         printtThinSeparator();
 
-        // Penambahan order
         do {
             System.out.print("Input short menu name: ");
             String menuShortName = input.nextLine();
-            System.out.print("Input the Quantity: ");
-            int totalMenuOrdered = input.nextInt();
+            String menuQuantity = "";
+            while (!menuQuantity.matches("[0-9]+")) {
+                System.out.print("Input the Quantity: ");
+                menuQuantity = input.nextLine();
+            }
 
-            for (int i = 0; i < cashierMachine.getAllMenu().size(); i++) {
-                if (menuShortName == cashierMachine.getAllMenu().get(i).getMenuShortName()) {
-                    menuOrderedByCustomer.add(new MenuOrder(cashierMachine.getAllMenu().get(i), totalMenuOrdered));
-                    doesMenuExist = true;
+            List<Menu> allMenu = cashierMachine.getAllMenu();
+            for (Menu menu : allMenu) {
+                if (menuShortName.equals(menu.getMenuShortName())) {
+                    orderedMenuList.add(new MenuOrder(menu, Integer.parseInt(menuQuantity)));
+                    System.out.println("Menu successfully added to Menu Order");
+                    menuExist = true;
                     break;
                 }
             }
 
-            if (doesMenuExist == false) {
+            if (!menuExist) {
                 System.out.println("The menu doesn't exist, please input again!");
                 continue;
             }
 
-            System.out.print("do you want to add order again? (y/t)");
+            System.out.print("do you want to add order again? (y/n)");
             String lanjut = input.nextLine();
 
-            if (lanjut.equals('t')) {
+            if (lanjut.equals("n")) {
                 validate = false;
             }
             printtThinSeparator();
         } while (validate);
 
-        // Buat objek order
-        Order order = new Order(menuOrderedByCustomer, customerName, customerMoney, employee, customerTable);
-        cashierMachine.addOrder(order);
+        cashierMachine.addOrder(new Order(orderedMenuList, customerName, customerMoney, employee, customerTable));
     }
 
     private static void markOrderComplete() {
-
-        boolean validate = false;
-        int findOrder = 0;
-
-        do {
-            System.out.print("Input finished order ID: ");
-            String uuid = input.nextLine();
-            findOrder = cashierMachine.findOrder(UUID.fromString(uuid));
-
-            if (findOrder == -1) {
-                validate = true;
-                System.out.println("Wrong ID!, please input ID again!");
+        UUID uuid = null;
+        while (true) {
+            try {
+                System.out.print("Input finished order ID (type ? to list all unfinished orders and ?x to cancel): ");
+                String inputString = input.nextLine();
+                if (inputString.equals("?")) {
+                    printUnfinishedOrders();
+                } else if (inputString.equals("?x")) {
+                    break;
+                }
+                uuid = UUID.fromString(inputString);
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid UUID, please enter the valid one!");
             }
-
-        } while (validate);
-
-        cashierMachine.getOrders().get(findOrder).setDone(true);
+        }
+        List<Order> orders = cashierMachine.getUnfinishedOrders();
+        for (Order order : orders) {
+            if (order.getOrderId().equals(uuid)) {
+                order.setDone(true);
+                cashierMachine.editOrder(uuid, order);
+            }
+        }
     }
 
     private static void editUnfinishedOrder() {
-        // TODO
         List<Order> unfinishedOrders = cashierMachine.getUnfinishedOrders();
-        for (int i = 0; i < unfinishedOrders.size(); i++) {
-            System.out.println((i+1) + " " +
-                    unfinishedOrders.get(i).getOrderId() + " " +
-                    unfinishedOrders.get(i).getCustomerName() + " " +
-                    unfinishedOrders.get(i).getTotalPrice() + " " +
-                    unfinishedOrders.get(i).getTableNumber());
+        int size = unfinishedOrders.size();
+        int i = 0;
+        for (Order order : unfinishedOrders) {
+            System.out.println(i + ":");
+            System.out.println(order.toString());
         }
-        System.out.printf("Select unfinished order to edit (1 to %d)", unfinishedOrders.size());
-        int unfinishedOrderNum = Integer.parseInt(input.nextLine());
-        if (unfinishedOrderNum > unfinishedOrders.size()) return;
-        Order unfinishedOrder = unfinishedOrders.get(unfinishedOrderNum-1);
+
+        System.out.printf("Select unfinished order to edit (0 to %d)", size);
+        String inputString = "";
+        int unfinishedOrderNum = -1;
+        do {
+            inputString = input.nextLine();
+            if (inputString.matches("[0-9]+")) {
+                unfinishedOrderNum = Integer.parseInt(input.nextLine());
+                if (unfinishedOrderNum >= 0 && unfinishedOrderNum <= size) {
+                    break;
+                }
+            }
+
+            System.out.println("Input must be number and between 0 and " + size);
+        } while (true);
+
+        Order unfinishedOrder = unfinishedOrders.get(unfinishedOrderNum);
+
         System.out.println(unfinishedOrder.toString());
-        System.out.println("Select field to edit 1. Menu Order\n" +
-                "2. Customer Name\n" +
-                "3. Table Number\n" +
-                "4. Order Status\n");
-        int editChoice = Integer.parseInt(input.nextLine());
+
+        int editChoice = -1;
+        do {
+            printtThinSeparator();
+            System.out.println("Field to edit");
+            printtThinSeparator();
+            System.out.println("1. Customer Name");
+            System.out.println("2. Table Number");
+            System.out.println("3. Order Status");
+            System.out.println("Choose field to edit: ");
+            inputString = input.nextLine();
+            if (inputString.matches("[1-4]")) {
+                editChoice = Integer.parseInt(inputString);
+                break;
+            }
+        } while (true);
 
         switch (editChoice) {
             case 1:
-
+                System.out.printf("Old customer name: %s\n", unfinishedOrder.getCustomerName());
+                System.out.println("Enter new customer name (type enter to keep the old one): ");
+                inputString = input.nextLine();
+                if (!inputString.equals("")) {
+                    unfinishedOrder.setCustomerName(inputString);
+                }
                 break;
             case 2:
-                System.out.printf("Old customer name: %s\n", unfinishedOrder.getCustomerName());
-                System.out.println("New customer name: ");
-                unfinishedOrder.setCustomerName(input.nextLine());
+                System.out.printf("Old table number: %d\n", unfinishedOrder.getTableNumber());
+                do {
+                    System.out.println("Enter new table number (type enter to keep the old one): ");
+                    inputString = input.nextLine();
+                    if (!inputString.equals("")) {
+                        if (inputString.equals("[0-9]+")) {
+                            unfinishedOrder.setTableNumber(Integer.parseInt(inputString));
+                        } else {
+                            System.out.println("Input must be number");
+                        }
+                    }
+                } while (!inputString.equals(""));
                 break;
             case 3:
-                System.out.printf("Old table number: %d\n", unfinishedOrder.getTableNumber());
-                System.out.println("New table number: ");
-                unfinishedOrder.setTableNumber(Integer.parseInt(input.nextLine()));
-                break;
-            case 4:
                 System.out.println("Change order status to done? (Y/n)");
                 String case4Choice = input.nextLine();
                 if (case4Choice.equals("Y") || case4Choice.equals("y") || case4Choice.equals("")) {
@@ -275,15 +319,53 @@ public class App {
     }
 
     private static void cancelUnfinishedOrder() {
-        // WARNING: not mvp
+        UUID uuid = null;
+        while (true) {
+            try {
+                System.out.print(
+                        "Input order ID to be canceled (type ? to list all unfinished orders and ?x to cancel): ");
+                String inputString = input.nextLine();
+                if (inputString.equals("?")) {
+                    printUnfinishedOrders();
+                } else if (inputString.equals("?x")) {
+                    break;
+                }
+                uuid = UUID.fromString(inputString);
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid UUID, please enter the valid one!");
+            }
+
+            if (!cashierMachine.removeOrder(uuid)) {
+                System.out.println("Order with specified order ID not found");
+                continue;
+            }
+
+            System.out.println("Order removed successfully");
+        }
+
     }
 
     private static void printUnfinishedOrders() {
-        // WARNING: not mvp
+        List<Order> unfinishedOrderList = cashierMachine.getUnfinishedOrders();
+        printBoldSeparator();
+        System.out.println("Unfinished Orders");
+        printBoldSeparator();
+        for (Order order : unfinishedOrderList) {
+            System.out.println(order.toString());
+            printtThinSeparator();
+        }
     }
 
     private static void printNewFinishedOrders() {
-        // WARNING: not mvp
+        List<Order> finishedOrderList = cashierMachine.getFinishedOrders();
+        printBoldSeparator();
+        System.out.println("New Finished Orders");
+        printBoldSeparator();
+        for (Order order : finishedOrderList) {
+            System.out.println(order.toString());
+            printtThinSeparator();
+        }
     }
 
     private static void printAllOrderNewOrders() {
@@ -291,34 +373,42 @@ public class App {
         newOrderList.addAll(cashierMachine.getUnfinishedOrders());
         newOrderList.addAll(cashierMachine.getFinishedOrders());
 
-        printtThinSeparator();
+        printBoldSeparator();
         System.out.println("All new Orders: ");
-        printtThinSeparator();
+        printBoldSeparator();
         for (Order order : newOrderList) {
             System.out.println(order.toString());
+            printtThinSeparator();
         }
     }
 
     private static void saveOrderToRecord() {
-        // WARNING: not mvp
+        if (cashierMachine.saveToRecord()) {
+            System.out.println("New Orders saved to record successfully");
+        } else {
+            System.out.println("Failed to save new orders to record");
+        }
     }
 
     private static void printOrderRecord() {
-        // WARNING: not mvp
+        List<Order> orderRecordList = ((ManagerMachine) cashierMachine).getOrderRecord();
+        printBoldSeparator();
+        System.out.println("Order Record List");
+        printBoldSeparator();
+        for (Order order : orderRecordList) {
+            System.out.println(order.toString());
+            printtThinSeparator();
+        }
     }
 
     private static void addMenu() {
-        if (cashierMachine == null) {
-            return;
-        }
-
-        System.out.println("Enter new menu name");
+        System.out.print("Enter new menu name: ");
         String menuName = input.nextLine();
-        System.out.println("Enter new menu shortname");
+        System.out.print("Enter new menu shortname: ");
         String menuShortName = input.nextLine();
-        System.out.printf("1. Food\n2. Drink\nEnter category for %s (1 or 2)\n", menuShortName);
+        System.out.printf("1. Food\n2. Drink\nEnter category for %s (1 or 2): ", menuShortName);
         int foodCatInt = Integer.parseInt(input.nextLine());
-        System.out.printf("Enter price for %s\n", menuShortName);
+        System.out.printf("Enter price for %s: ", menuShortName);
         int newMenuPrice = Integer.parseInt(input.nextLine());
 
         FoodCategory newMenuFoodCat;
@@ -330,31 +420,32 @@ public class App {
             newMenuFoodCat = FoodCategory.Food;
         }
 
-        ManagerMachine mc = (ManagerMachine) cashierMachine;
-        boolean isAdded = mc.addMenu(
-                new Menu(menuShortName, menuName, newMenuFoodCat, newMenuPrice)
-        );
+        ManagerMachine managerMachine = (ManagerMachine) cashierMachine;
 
-        if (isAdded) {
+        if (managerMachine.addMenu(new Menu(menuShortName, menuName, newMenuFoodCat, newMenuPrice))) {
             System.out.println("New menu is successfully added");
             return;
         }
-        System.out.println("New menu is added");
+
+        System.out.println("Failed to add new menu");
     }
 
     private static void removeMenu() {
-        if (cashierMachine == null) {
+        ManagerMachine managerMachine = (ManagerMachine) cashierMachine;
+        String menuShortName = "";
+        do {
+            System.out.print("Enter menu short name (type ? to list all menu): ");
+            menuShortName = input.nextLine();
+            if (menuShortName.equals("?")) {
+                printAllMenu();
+            }
+        } while (menuShortName.equals("?"));
+
+        if (managerMachine.removeMenu(menuShortName)) {
+            System.out.println("Successfully remove specified menu");
             return;
         }
-        printAllMenu();
-        System.out.println("Enter menu short name :");
-        String menuShortName = input.nextLine();
-        ManagerMachine mc = (ManagerMachine) cashierMachine;
-        boolean isRemoved = mc.removeMenu(menuShortName);
-        if (isRemoved) {
-            System.out.println("Menu is successfully removed");
-            return;
-        }
+
         System.out.println("Menu is not found");
     }
 
@@ -383,6 +474,7 @@ public class App {
                 }
                 do {
                     System.out.print("Enter new food category [Makanan/Minuman] (type enter to keep the old one): ");
+                    inputString = input.nextLine();
                     if (inputString.equals("Makanan")) {
                         newMenu.setFoodCategory(FoodCategory.Food);
                         break;
@@ -414,9 +506,8 @@ public class App {
                 managerMachine.editMenu(menuShortName, newMenu);
                 return;
             }
-
-            System.out.println("Sorry, menu with specified menu short name not found");
         }
+        System.out.println("Sorry, menu with specified menu short name not found");
     }
 
     private static void printBoldSeparator() {

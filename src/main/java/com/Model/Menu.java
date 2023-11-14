@@ -1,4 +1,4 @@
-package com.CashierAppUtil;
+package com.Model;
 
 /**
  * Menu

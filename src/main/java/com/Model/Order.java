@@ -1,9 +1,7 @@
-package com.CashierAppUtil;
+package com.Model;
 
 import java.util.List;
 import java.util.UUID;
-
-import com.Model.Employee;
 
 /**
  * Order
@@ -15,12 +13,13 @@ public class Order {
     private String customerName;
     private int customerMoney;
     private int customerChange;
-    private Employee employee;
+    private EmployeeModel employee;
     private int totalPrice;
     private int tableNumber;
     private boolean done = false;
 
-    public Order(List<MenuOrder> menuOrders, String customerName, int customerMoney, Employee employee, int tableNumber) {
+    public Order(List<MenuOrder> menuOrders, String customerName, int customerMoney, EmployeeModel employee,
+            int tableNumber) {
         this.orderId = UUID.randomUUID();
         this.menuOrders = menuOrders;
         this.customerName = customerName;
@@ -30,13 +29,13 @@ public class Order {
     }
 
     public int getTotalPrice() {
-        totalPrice = 0;
-        if (!menuOrders.isEmpty()){
+        this.totalPrice = 0;
+        if (!menuOrders.isEmpty()) {
             for (MenuOrder menuOrder : menuOrders) {
                 totalPrice += menuOrder.getSubTotal();
             }
         }
-        return totalPrice;
+        return this.totalPrice;
     }
 
     public UUID getOrderId() {
@@ -84,11 +83,8 @@ public class Order {
     }
 
     public int getCustomerChange() {
-        return customerChange;
-    }
-
-    public void setCustomerChange(int customerChange) {
-        this.customerChange = customerChange;
+        this.customerChange = this.customerMoney - this.getTotalPrice();
+        return this.customerChange;
     }
 
     @Override
@@ -105,7 +101,8 @@ public class Order {
         s.append('\n');
         s.append(String.format("%-15s : %s\n", "Total Price", this.getTotalPrice()));
         s.append(String.format("%-15s : %s\n", "Cash", this.customerMoney));
-        s.append(String.format("%-15s : %s\n", "Change", this.customerChange));
+        s.append(String.format("%-15s : %d\n", "Change", this.getCustomerChange()));
+        s.append(String.format("%-15s : %s\n", "Status", this.done ? "Finished" : "Unfinished"));
 
         return s.toString();
     }

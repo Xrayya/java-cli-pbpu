@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.Model.Menu;
+import com.Model.Order;
 import com.RecordUtil.Log;
 import com.RecordUtil.Record;
 
@@ -141,9 +143,9 @@ public class CashierMachine {
     /**
      * Save the current order list to the record file
      */
-    public void saveToRecord() {
+    public boolean saveToRecord() {
         Log<Order> orderLog = new Log<>("orders", Order[].class);
-        orderLog.appendRecord(this.orders);
+        return orderLog.appendRecord(this.orders);
     }
 
     public void synchronizeMenu() {
