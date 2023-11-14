@@ -7,13 +7,15 @@ import java.util.UUID;
 
 import com.CashierAppUtil.Auth;
 import com.CashierAppUtil.CashierMachine;
-import com.CashierAppUtil.MenuOrder;
-import com.CashierAppUtil.FoodCategory;
 import com.CashierAppUtil.ManagerMachine;
-import com.CashierAppUtil.Menu;
-import com.CashierAppUtil.Order;
 import com.Model.Employee;
+import com.Model.EmployeeModel;
+import com.Model.FoodCategory;
 import com.Model.Manager;
+import com.Model.Menu;
+import com.Model.MenuOrder;
+import com.Model.Order;
+import com.RecordUtil.Log;
 
 /**
  * Hello world!
@@ -53,9 +55,9 @@ public class App {
                 case "3":
                     markOrderComplete();
                     break;
-                // case "4":
-                //     editUnfinishedOrder();
-                //     break;
+                case "4":
+                    editUnfinishedOrder();
+                    break;
                 case "5":
                     cancelUnfinishedOrder();
                     break;
@@ -109,7 +111,7 @@ public class App {
         System.out.println("1. Print All Menu");
         System.out.println("2. Take Order");
         System.out.println("3. Mark Order Done");
-        // System.out.println("4. Edit Unfinished Order");
+        System.out.println("4. Edit Unfinished Order");
         System.out.println("5. Cancel Unfinished Order"); // not mvp
         System.out.println("6. Print Unfinished Orders"); // not mvp
         System.out.println("7. Print New Finished Orders"); // not mvp
@@ -271,10 +273,9 @@ public class App {
             printtThinSeparator();
             System.out.println("Field to edit");
             printtThinSeparator();
-            System.out.println("1. Menu Order");
-            System.out.println("2. Customer Name");
-            System.out.println("3. Table Number");
-            System.out.println("4. Order Status");
+            System.out.println("1. Customer Name");
+            System.out.println("2. Table Number");
+            System.out.println("3. Order Status");
             System.out.println("Choose field to edit: ");
             inputString = input.nextLine();
             if (inputString.matches("[1-4]")) {
@@ -285,9 +286,6 @@ public class App {
 
         switch (editChoice) {
             case 1:
-
-                break;
-            case 2:
                 System.out.printf("Old customer name: %s\n", unfinishedOrder.getCustomerName());
                 System.out.println("Enter new customer name (type enter to keep the old one): ");
                 inputString = input.nextLine();
@@ -295,7 +293,7 @@ public class App {
                     unfinishedOrder.setCustomerName(inputString);
                 }
                 break;
-            case 3:
+            case 2:
                 System.out.printf("Old table number: %d\n", unfinishedOrder.getTableNumber());
                 do {
                     System.out.println("Enter new table number (type enter to keep the old one): ");
@@ -309,7 +307,7 @@ public class App {
                     }
                 } while (!inputString.equals(""));
                 break;
-            case 4:
+            case 3:
                 System.out.println("Change order status to done? (Y/n)");
                 String case4Choice = input.nextLine();
                 if (case4Choice.equals("Y") || case4Choice.equals("y") || case4Choice.equals("")) {
@@ -404,13 +402,13 @@ public class App {
     }
 
     private static void addMenu() {
-        System.out.println("Enter new menu name: ");
+        System.out.print("Enter new menu name: ");
         String menuName = input.nextLine();
-        System.out.println("Enter new menu shortname: ");
+        System.out.print("Enter new menu shortname: ");
         String menuShortName = input.nextLine();
-        System.out.printf("1. Food\n2. Drink\nEnter category for %s (1 or 2)\n", menuShortName);
+        System.out.printf("1. Food\n2. Drink\nEnter category for %s (1 or 2): ", menuShortName);
         int foodCatInt = Integer.parseInt(input.nextLine());
-        System.out.printf("Enter price for %s\n", menuShortName);
+        System.out.printf("Enter price for %s: ", menuShortName);
         int newMenuPrice = Integer.parseInt(input.nextLine());
 
         FoodCategory newMenuFoodCat;
@@ -476,6 +474,7 @@ public class App {
                 }
                 do {
                     System.out.print("Enter new food category [Makanan/Minuman] (type enter to keep the old one): ");
+                    inputString = input.nextLine();
                     if (inputString.equals("Makanan")) {
                         newMenu.setFoodCategory(FoodCategory.Food);
                         break;
@@ -507,9 +506,8 @@ public class App {
                 managerMachine.editMenu(menuShortName, newMenu);
                 return;
             }
-
-            System.out.println("Sorry, menu with specified menu short name not found");
         }
+        System.out.println("Sorry, menu with specified menu short name not found");
     }
 
     private static void printBoldSeparator() {

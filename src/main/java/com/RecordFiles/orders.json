@@ -1,1 +1,37 @@
-[]
+[
+  {
+    "orderId": "f2a1958e-71e2-465d-8920-7aadd1d96664",
+    "menuOrders": [
+      {
+        "menu": {
+          "menuShortName": "nasgorKuah",
+          "menuName": "nasgor kuah",
+          "foodCategory": "Food",
+          "price": 11000
+        },
+        "quantity": 1
+      },
+      {
+        "menu": {
+          "menuShortName": "nasgor",
+          "menuName": "nasgor",
+          "foodCategory": "Food",
+          "price": 15000
+        },
+        "quantity": 2
+      }
+    ],
+    "customerName": "bambang",
+    "customerMoney": 100000,
+    "customerChange": 59000,
+    "employee": {
+      "employeeID": "922b6635-0249-45b8-93b3-a3f9cf915ac7",
+      "name": "Tester Manager",
+      "username": "testing_manager",
+      "password": "rahasia"
+    },
+    "totalPrice": 41000,
+    "tableNumber": 1,
+    "done": false
+  }
+]

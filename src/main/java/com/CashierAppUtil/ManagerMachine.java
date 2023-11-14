@@ -3,6 +3,8 @@ package com.CashierAppUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Model.Menu;
+import com.Model.Order;
 import com.RecordUtil.Log;
 import com.RecordUtil.Record;
 
@@ -24,7 +26,7 @@ public class ManagerMachine extends CashierMachine {
      * @return `true` if menu succesfully added or `false` if not
      */
     public boolean addMenu(Menu menu) {
-        new Log<Menu>("menus", Menu[].class).appendRecord(this.menus);
+        new Log<Menu>("menus", Menu[].class).appendRecord(menu);
         return this.menus.add(menu);
     }
 
@@ -38,7 +40,7 @@ public class ManagerMachine extends CashierMachine {
         for (Menu menu : menus) {
             if (menu.getMenuShortName().equals(menuShortName)) {
                 this.menus.remove(menu);
-                new Log<Menu>("menus", Menu[].class).appendRecord(this.menus);
+                new Log<Menu>("menus", Menu[].class).rewriteRecord(this.menus);
                 return true;
             }
         }
@@ -57,7 +59,7 @@ public class ManagerMachine extends CashierMachine {
         for (int i = 0; i < this.menus.size(); i++) {
             if (menuShortName == this.menus.get(i).getMenuShortName()) {
                 this.menus.set(i, menu);
-                new Log<Menu>("menus", Menu[].class).appendRecord(this.menus);
+                new Log<Menu>("menus", Menu[].class).rewriteRecord(this.menus);
                 return true;
             }
         }

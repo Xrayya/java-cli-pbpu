@@ -1,9 +1,7 @@
-package com.CashierAppUtil;
+package com.Model;
 
 import java.util.List;
 import java.util.UUID;
-
-import com.Model.Employee;
 
 /**
  * Order
@@ -15,12 +13,12 @@ public class Order {
     private String customerName;
     private int customerMoney;
     private int customerChange;
-    private Employee employee;
+    private EmployeeModel employee;
     private int totalPrice;
     private int tableNumber;
     private boolean done = false;
 
-    public Order(List<MenuOrder> menuOrders, String customerName, int customerMoney, Employee employee,
+    public Order(List<MenuOrder> menuOrders, String customerName, int customerMoney, EmployeeModel employee,
             int tableNumber) {
         this.orderId = UUID.randomUUID();
         this.menuOrders = menuOrders;
@@ -104,6 +102,7 @@ public class Order {
         s.append(String.format("%-15s : %s\n", "Total Price", this.getTotalPrice()));
         s.append(String.format("%-15s : %s\n", "Cash", this.customerMoney));
         s.append(String.format("%-15s : %d\n", "Change", this.getCustomerChange()));
+        s.append(String.format("%-15s : %s\n", "Status", this.done ? "Finished" : "Unfinished"));
 
         return s.toString();
     }

@@ -1,1 +1,26 @@
-[{"menuShortName":"nasgor","menuName":"nasgor","foodCategory":"Food","price":15000},{"menuShortName":"nasgorAyam","menuName":"nasgor ayam","foodCategory":"Food","price":15000},{"menuShortName":"nasgorSapi","menuName":"nasgor sapi","foodCategory":"Food","price":15000},{"menuShortName":"nasgorKuah","menuName":"nasgor kuah","foodCategory":"Food","price":15000}]
+[
+  {
+    "menuShortName": "nasgor",
+    "menuName": "nasgor",
+    "foodCategory": "Food",
+    "price": 15000
+  },
+  {
+    "menuShortName": "nasgorAyam",
+    "menuName": "nasgor ayam",
+    "foodCategory": "Food",
+    "price": 15000
+  },
+  {
+    "menuShortName": "nasgorSapi",
+    "menuName": "nasgor sapi",
+    "foodCategory": "Food",
+    "price": 15000
+  },
+  {
+    "menuShortName": "nasgorKuah",
+    "menuName": "nasgor kuah",
+    "foodCategory": "Food",
+    "price": 11000
+  }
+]
